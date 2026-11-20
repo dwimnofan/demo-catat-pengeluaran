@@ -184,6 +184,57 @@
       transform: scale(0.98);
     }
 
+    /* Category Summary */
+    .category-summary-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .category-summary-empty {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .category-row-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .category-row-name {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .category-row-values {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .category-row-values strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .category-bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .category-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 999px;
+    }
+
     /* List Section */
     .section-header {
       display: flex;
@@ -332,6 +383,12 @@
       <div class="date-info" id="monthInfo"></div>
     </div>
 
+    <!-- Category Summary -->
+    <div class="card">
+      <h2 class="card-title">Per Kategori Bulan Ini</h2>
+      <div id="categorySummary"></div>
+    </div>
+
     <!-- Form -->
     <div class="card">
       <h2 class="card-title">Tambah Pengeluaran</h2>
@@ -452,6 +509,43 @@
         // Update count
         const countText = monthExpenses.length === 1 ? '1 item' : monthExpenses.length + ' item';
         document.getElementById('itemCount').textContent = countText;
+
+        // Render category summary
+        const categorySummaryEl = document.getElementById('categorySummary');
+        if (monthExpenses.length === 0) {
+          categorySummaryEl.innerHTML = '<p class="category-summary-empty">Belum ada data bulan ini.</p>';
+        } else {
+          const totalsByCategory = {};
+          monthExpenses.forEach(function(item) {
+            const category = item.category || 'Lainnya';
+            totalsByCategory[category] = (totalsByCategory[category] || 0) + Number(item.amount);
+          });
+
+          const categoryRows = Object.keys(totalsByCategory).map(function(category) {
+            return { category: category, amount: totalsByCategory[category] };
+          }).sort(function(a, b) {
+            return b.amount - a.amount;
+          });
+
+          categorySummaryEl.innerHTML = '<div class="category-summary-list">' + categoryRows.map(function(row) {
+            const percent = total > 0 ? (row.amount / total * 100) : 0;
+            const percentText = percent.toLocaleString('id-ID', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 1
+            }) + '%';
+            return `
+              <div class="category-row">
+                <div class="category-row-top">
+                  <div class="category-row-name">${escapeHtml(row.category)}</div>
+                  <div class="category-row-values"><strong>${formatRupiah(row.amount)}</strong> · ${percentText}</div>
+                </div>
+                <div class="category-bar">
+                  <div class="category-bar-fill" style="width: ${percent}%"></div>
+                </div>
+              </div>
+            `;
+          }).join('') + '</div>';
+        }
 
         // Render list
         const listEl = document.getElementById('expenseList');
