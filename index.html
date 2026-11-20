@@ -327,9 +327,9 @@
 
     <!-- Summary -->
     <div class="summary-card">
-      <div class="label">Total Pengeluaran Hari Ini</div>
-      <div class="total" id="totalToday">Rp 0</div>
-      <div class="date-info" id="todayDate"></div>
+      <div class="label">Total Pengeluaran Bulan Ini</div>
+      <div class="total" id="totalThisMonth">Rp 0</div>
+      <div class="date-info" id="monthInfo"></div>
     </div>
 
     <!-- Form -->
@@ -359,7 +359,7 @@
 
     <!-- List -->
     <div class="section-header">
-      <h2>Hari Ini</h2>
+      <h2>Bulan Ini</h2>
       <span class="count-badge" id="itemCount">0 item</span>
     </div>
 
@@ -391,14 +391,20 @@
         return `${year}-${month}-${day}`;
       }
 
-      // Format date for display
-      function formatDisplayDate() {
+      // Get current month string (YYYY-MM) in local timezone
+      function getThisMonthString() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        return `${year}-${month}`;
+      }
+
+      // Format month for display
+      function formatDisplayMonth() {
         const now = new Date();
         return now.toLocaleDateString('id-ID', {
-          weekday: 'long',
-          year: 'numeric',
           month: 'long',
-          day: 'numeric'
+          year: 'numeric'
         });
       }
 
@@ -418,52 +424,52 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
       }
 
-      // Get today's expenses
-      function getTodayExpenses() {
-        const today = getTodayString();
+      // Get this month's expenses
+      function getThisMonthExpenses() {
+        const month = getThisMonthString();
         return loadExpenses().filter(function(item) {
-          return item.date === today;
+          return item.date && item.date.indexOf(month) === 0;
         });
       }
 
       // Render the app
       function render() {
-        const todayExpenses = getTodayExpenses();
+        const monthExpenses = getThisMonthExpenses();
         // Sort by createdAt descending (newest first)
-        todayExpenses.sort(function(a, b) {
+        monthExpenses.sort(function(a, b) {
           return new Date(b.createdAt) - new Date(a.createdAt);
         });
 
-        // Update date display
-        document.getElementById('todayDate').textContent = formatDisplayDate();
+        // Update month display
+        document.getElementById('monthInfo').textContent = formatDisplayMonth();
 
         // Calculate total
-        const total = todayExpenses.reduce(function(sum, item) {
+        const total = monthExpenses.reduce(function(sum, item) {
           return sum + Number(item.amount);
         }, 0);
-        document.getElementById('totalToday').textContent = formatRupiah(total);
+        document.getElementById('totalThisMonth').textContent = formatRupiah(total);
 
         // Update count
-        const countText = todayExpenses.length === 1 ? '1 item' : todayExpenses.length + ' item';
+        const countText = monthExpenses.length === 1 ? '1 item' : monthExpenses.length + ' item';
         document.getElementById('itemCount').textContent = countText;
 
         // Render list
         const listEl = document.getElementById('expenseList');
         
-        if (todayExpenses.length === 0) {
+        if (monthExpenses.length === 0) {
           listEl.innerHTML = `
             <div class="empty-state">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="4" width="20" height="16" rx="2"></rect>
                 <path d="M7 15h0M2 9.5h20"></path>
               </svg>
-              <p>Belum ada pengeluaran hari ini.<br>Yuk catat pengeluaran pertamamu!</p>
+              <p>Belum ada pengeluaran bulan ini.<br>Yuk catat pengeluaran pertamamu!</p>
             </div>
           `;
           return;
         }
 
-        listEl.innerHTML = todayExpenses.map(function(item) {
+        listEl.innerHTML = monthExpenses.map(function(item) {
           const noteHtml = item.note && item.note.trim() 
             ? `<div class="expense-note">${escapeHtml(item.note)}</div>`
             : `<div class="expense-note empty">Tanpa catatan</div>`;
