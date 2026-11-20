@@ -636,6 +636,9 @@
 
       // Delete expense (global function for onclick)
       window.deleteExpense = function(id) {
+        if (!confirm('Hapus pengeluaran ini?')) {
+          return;
+        }
         const expenses = loadExpenses().filter(function(item) {
           return item.id !== id;
         });
