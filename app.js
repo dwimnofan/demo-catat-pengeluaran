@@ -82,6 +82,12 @@
         const countText = monthExpenses.length === 1 ? '1 item' : monthExpenses.length + ' item';
         document.getElementById('itemCount').textContent = countText;
 
+        // Update export button state
+        const exportBtn = document.getElementById('exportCsvBtn');
+        if (exportBtn) {
+          exportBtn.disabled = monthExpenses.length === 0;
+        }
+
         // Render category summary
         const categorySummaryEl = document.getElementById('categorySummary');
         if (monthExpenses.length === 0) {
@@ -217,6 +223,50 @@
         saveExpenses(expenses);
         render();
       };
+
+      // Escape CSV field
+      function escapeCsvField(value) {
+        const str = value == null ? '' : String(value);
+        if (/[",\n\r]/.test(str)) {
+          return '"' + str.replace(/"/g, '""') + '"';
+        }
+        return str;
+      }
+
+      // Export this month's expenses as CSV
+      function exportMonthCsv() {
+        const monthExpenses = getThisMonthExpenses();
+        if (monthExpenses.length === 0) {
+          return;
+        }
+
+        monthExpenses.sort(function(a, b) {
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+
+        const header = ['Tanggal', 'Kategori', 'Nominal', 'Catatan'];
+        const rows = monthExpenses.map(function(item) {
+          return [
+            item.date || '',
+            item.category || '',
+            item.amount,
+            item.note || ''
+          ].map(escapeCsvField).join(',');
+        });
+
+        const csvContent = '\uFEFF' + [header.map(escapeCsvField).join(',')].concat(rows).join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'pengeluaran-' + getThisMonthString() + '.csv';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+
+      document.getElementById('exportCsvBtn').addEventListener('click', exportMonthCsv);
 
       // Initial render
       render();

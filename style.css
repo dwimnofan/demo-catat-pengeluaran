@@ -248,6 +248,35 @@
       border-radius: 20px;
     }
 
+    .section-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-export {
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-export:hover:not(:disabled) {
+      background: #c7e9cb;
+    }
+
+    .btn-export:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     .expense-list {
       display: flex;
       flex-direction: column;
