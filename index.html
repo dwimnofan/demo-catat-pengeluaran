@@ -1,73 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catat Pengeluaran Harian</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>Catat Pengeluaran</h1>
-      <p>Catat pengeluaran harianmu dengan mudah</p>
-    </header>
-
-    <!-- Summary -->
-    <div class="summary-card">
-      <div class="label">Total Pengeluaran Bulan Ini</div>
-      <div class="total" id="totalThisMonth">Rp 0</div>
-      <div class="date-info" id="monthInfo"></div>
-    </div>
-
-    <!-- Category Summary -->
-    <div class="card">
-      <h2 class="card-title">Per Kategori Bulan Ini</h2>
-      <div id="categorySummary"></div>
-    </div>
-
-    <!-- Form -->
-    <div class="card">
-      <h2 class="card-title">Tambah Pengeluaran</h2>
-      <form id="expenseForm" autocomplete="off">
-        <div class="form-group">
-          <label for="amount">Nominal (Rp)</label>
-          <input type="number" id="amount" placeholder="contoh: 25000" min="1" inputmode="numeric" required>
-        </div>
-        <div class="form-group">
-          <label for="category">Kategori</label>
-          <select id="category" required>
-            <option value="Makan">Makan</option>
-            <option value="Transport">Transport</option>
-            <option value="Belanja">Belanja</option>
-            <option value="Lainnya">Lainnya</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="note">Catatan</label>
-          <input type="text" id="note" placeholder="contoh: Nasi goreng siang">
-        </div>
-        <button type="submit" class="btn-submit">+ Simpan Pengeluaran</button>
-      </form>
-    </div>
-
-    <!-- List -->
-    <div class="section-header">
-      <h2>Bulan Ini</h2>
-      <div class="section-actions">
-        <span class="count-badge" id="itemCount">0 item</span>
-        <button type="button" class="btn-export" id="exportCsvBtn">Export CSV</button>
-      </div>
-    </div>
-
-    <div class="expense-list" id="expenseList">
-      <!-- Items rendered here -->
-    </div>
-  </div>
-
-  <script src="app.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Catat Pengeluaran Harian</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
