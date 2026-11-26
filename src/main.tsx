@@ -8,3 +8,23 @@ createRoot(document.getElementById("root")!).render(
     <App />
   </StrictMode>,
 )
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/demo-catat-pengeluaran/sw.js").then((reg) => {
+      reg.addEventListener("updatefound", () => {
+        const nw = reg.installing;
+        if (!nw) return;
+        nw.addEventListener("statechange", () => {
+          if (nw.state === "installed" && navigator.serviceWorker.controller) {
+            window.location.reload();
+          }
+        });
+      });
+    }).catch(() => {});
+  });
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    // no-op to allow reload flow above
+  });
+}
+

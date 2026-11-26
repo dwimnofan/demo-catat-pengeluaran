@@ -1,0 +1,29 @@
+{
+  "name": "Catat Pengeluaran Harian",
+  "short_name": "CatatPengeluaran",
+  "start_url": "/demo-catat-pengeluaran/",
+  "scope": "/demo-catat-pengeluaran/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    {
+      "src": "/demo-catat-pengeluaran/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/demo-catat-pengeluaran/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/demo-catat-pengeluaran/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
